@@ -15,6 +15,7 @@ public class IndexControl {
     public IndexControl(MovieService movieService) {
         this.movieService = movieService;
     }
+
     @GetMapping("/index")
     public String index(Model model, HttpSession session) {
         model.addAttribute("user", SessionControl.getUserSession(session));
