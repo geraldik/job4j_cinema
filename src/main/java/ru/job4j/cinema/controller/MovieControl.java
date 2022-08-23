@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class MovieControl {
 
-
     private final MovieService movieService;
 
     private final HallService hallService;
