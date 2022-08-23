@@ -9,6 +9,7 @@ import ru.job4j.cinema.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 @Repository
@@ -21,7 +22,7 @@ public class UserDAO {
         this.pool = pool;
     }
 
-    public User add(User user) {
+    public Optional<User> add(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
                      "INSERT INTO users(username, email, phone) VALUES (?, ?, ?)",
@@ -40,7 +41,7 @@ public class UserDAO {
             LOG.warn("Can't add user", e);
             user = null;
         }
-        return user;
+        return Optional.ofNullable(user);
     }
 
     public Optional<User> findById(int id) {
@@ -50,9 +51,7 @@ public class UserDAO {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return Optional.of(new User(it.getInt("id"), it.getString("name"),
-                            it.getString("email"),
-                            it.getString("phone")));
+                    return Optional.of(initUser(it));
                 }
             }
         } catch (Exception e) {
@@ -69,14 +68,18 @@ public class UserDAO {
             ps.setString(2, phone);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return Optional.of(new User(it.getInt("id"), it.getString("username"),
-                            it.getString("email"),
-                            it.getString("phone")));
+                    return Optional.of(initUser(it));
                 }
             }
         } catch (Exception e) {
             LOG.warn("Can't find user by email and phone", e);
         }
         return Optional.empty();
+    }
+
+    private static User initUser(ResultSet it) throws SQLException {
+        return new User(it.getInt("id"), it.getString("username"),
+                it.getString("email"),
+                it.getString("phone"));
     }
 }

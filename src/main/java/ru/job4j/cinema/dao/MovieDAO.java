@@ -9,6 +9,7 @@ import ru.job4j.cinema.model.Movie;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ public class MovieDAO {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return Optional.of(new Movie(it.getInt("id"), it.getString("name")));
+                    return Optional.of(initMovie(it));
                 }
             }
         } catch (Exception e) {
@@ -47,7 +48,7 @@ public class MovieDAO {
             ps.setString(1, name);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return Optional.of(new Movie(it.getInt("id"), it.getString("name")));
+                    return Optional.of(initMovie(it));
                 }
             }
         } catch (Exception e) {
@@ -63,12 +64,16 @@ public class MovieDAO {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    movies.add(new Movie(it.getInt("id"), it.getString("name")));
+                    movies.add(initMovie(it));
                 }
             }
         } catch (Exception e) {
             LOG.warn("Can't find all sessions", e);
         }
         return movies;
+    }
+
+    private static Movie initMovie(ResultSet it) throws SQLException {
+        return new Movie(it.getInt("id"), it.getString("name"));
     }
 }

@@ -27,7 +27,7 @@ public class UserService {
     }
 
     public Optional<User> add(User user) {
-        return Optional.ofNullable(userDAO.add(user));
+        return userDAO.add(user);
     }
 
     public Optional<User> findUserByEmailAndPhone(String email, String phone) {

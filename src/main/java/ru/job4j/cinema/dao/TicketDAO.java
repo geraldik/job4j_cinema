@@ -11,6 +11,7 @@ import ru.job4j.cinema.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -59,10 +60,7 @@ public class TicketDAO {
             ps.setInt(3, cell);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return Optional.of(new Ticket(it.getInt("id"), it.getInt("session_id"),
-                            it.getInt("pos_row"),
-                            it.getInt("cell"),
-                            it.getInt("user_id")));
+                    return Optional.of(initTicket(it));
                 }
             }
         } catch (Exception e) {
@@ -80,10 +78,7 @@ public class TicketDAO {
             ps.setInt(1, movieId);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    tickets.add(new Ticket(it.getInt("id"), it.getInt("movie_id"),
-                        it.getInt("pos_row"),
-                        it.getInt("cell"),
-                        it.getInt("user_id")));
+                    tickets.add(initTicket(it));
                 }
                 return Optional.of(tickets);
             }
@@ -103,10 +98,7 @@ public class TicketDAO {
             ps.setInt(2, row);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    tickets.add(new Ticket(it.getInt("id"), it.getInt("movie_id"),
-                            it.getInt("pos_row"),
-                            it.getInt("cell"),
-                            it.getInt("user_id")));
+                    tickets.add(initTicket(it));
                 }
             }
         } catch (Exception e) {
@@ -124,15 +116,19 @@ public class TicketDAO {
             ps.setInt(1, user.getId());
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    tickets.add(new Ticket(it.getInt("id"), it.getInt("movie_id"),
-                            it.getInt("pos_row"),
-                            it.getInt("cell"),
-                            it.getInt("user_id")));
+                    tickets.add(initTicket(it));
                 }
             }
         } catch (Exception e) {
             LOG.warn("Can't find tickets for user", e);
         }
         return tickets;
+    }
+
+    private static Ticket initTicket(ResultSet it) throws SQLException {
+        return new Ticket(it.getInt("id"), it.getInt("movie_id"),
+                it.getInt("pos_row"),
+                it.getInt("cell"),
+                it.getInt("user_id"));
     }
 }
