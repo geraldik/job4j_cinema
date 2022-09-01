@@ -20,7 +20,7 @@ public class HallService {
         this.ticketDAO = ticketDAO;
     }
 
-    public List<Integer> rows() {
+    public List<Integer> getRows() {
         List<Integer> rows = new ArrayList<>();
         for (int i = 1; i <= RAWS_NUMBER; i++) {
             rows.add(i);
@@ -28,7 +28,7 @@ public class HallService {
         return rows;
     }
 
-    public List<Integer> cells() {
+    public List<Integer> getCells() {
         List<Integer> cells = new ArrayList<>();
         for (int i = 1; i <= CELLS_NUMBER; i++) {
             cells.add(i);
@@ -40,8 +40,12 @@ public class HallService {
         return ticketDAO.findByMovieIdAndRow(movieId, row);
     }
 
+    private Collection<Ticket> findByMovieId(int movieId) {
+        return ticketDAO.findByMovieId(movieId);
+    }
+
     public Collection<Integer> getFreeSeats(int movieId, int row) {
-        List<Integer> cells = cells();
+        List<Integer> cells = getCells();
         findByMovieIdAndRow(movieId, row).forEach(x -> {
             if (cells.contains(x.getCell())) {
                 cells.remove(Integer.valueOf(x.getCell()));
@@ -50,4 +54,13 @@ public class HallService {
         return cells;
     }
 
+    public Collection<Integer> getFreeRows(int movieId) {
+        List<Integer> rows = getRows();
+        findByMovieId(movieId).forEach(x -> {
+            if (getFreeSeats(movieId, x.getRow()).isEmpty()) {
+                rows.remove(Integer.valueOf(x.getRow()));
+            }
+        });
+        return rows;
+    }
 }

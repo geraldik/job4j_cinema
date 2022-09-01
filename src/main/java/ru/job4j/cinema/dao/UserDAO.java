@@ -14,6 +14,8 @@ import java.util.Optional;
 
 @Repository
 public class UserDAO {
+    public static final String ADD_USER = "INSERT INTO users(username, email, phone) VALUES (?, ?, ?)";
+    public static final String FIND_USER_BY_EMAIL_AND_PHONE = "SELECT * FROM users WHERE email = ? AND phone = ?";
     private final BasicDataSource pool;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserDAO.class.getName());
@@ -25,9 +27,8 @@ public class UserDAO {
     public Optional<User> add(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "INSERT INTO users(username, email, phone) VALUES (?, ?, ?)",
-                     PreparedStatement.RETURN_GENERATED_KEYS)
-        ) {
+                     ADD_USER,
+                     PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhone());
@@ -44,25 +45,9 @@ public class UserDAO {
         return Optional.ofNullable(user);
     }
 
-    public Optional<User> findById(int id) {
-        try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM users WHERE id = ?")
-        ) {
-            ps.setInt(1, id);
-            try (ResultSet it = ps.executeQuery()) {
-                if (it.next()) {
-                    return Optional.of(initUser(it));
-                }
-            }
-        } catch (Exception e) {
-            LOG.warn("Can't find user by id", e);
-        }
-        return Optional.empty();
-    }
-
     public Optional<User> findUserByEmailAndPhone(String email, String phone) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM users WHERE email = ? AND phone = ?")
+             PreparedStatement ps = cn.prepareStatement(FIND_USER_BY_EMAIL_AND_PHONE)
         ) {
             ps.setString(1, email);
             ps.setString(2, phone);

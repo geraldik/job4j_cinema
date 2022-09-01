@@ -17,6 +17,8 @@ import java.util.Optional;
 @Repository
 public class MovieDAO {
 
+    public static final String FIND_BY_ID = "SELECT * FROM movie WHERE id = ?";
+    public static final String FIND_ALL = "SELECT * FROM movie";
     private final BasicDataSource pool;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserDAO.class.getName());
@@ -27,7 +29,7 @@ public class MovieDAO {
 
     public Optional<Movie> findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM movie WHERE id = ?")
+             PreparedStatement ps = cn.prepareStatement(FIND_BY_ID)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -41,26 +43,10 @@ public class MovieDAO {
         return Optional.empty();
     }
 
-    public Optional<Movie> findSessionByName(String name) {
-        try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM movie WHERE name = ?")
-        ) {
-            ps.setString(1, name);
-            try (ResultSet it = ps.executeQuery()) {
-                if (it.next()) {
-                    return Optional.of(initMovie(it));
-                }
-            }
-        } catch (Exception e) {
-            LOG.warn("Can't find session by name", e);
-        }
-        return Optional.empty();
-    }
-
     public List<Movie> findAll() {
         List<Movie> movies = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("SELECT * FROM movie")
+             PreparedStatement ps = cn.prepareStatement(FIND_ALL)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
