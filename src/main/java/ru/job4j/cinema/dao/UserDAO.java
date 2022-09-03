@@ -14,8 +14,8 @@ import java.util.Optional;
 
 @Repository
 public class UserDAO {
-    public static final String ADD_USER = "INSERT INTO users(username, email, phone) VALUES (?, ?, ?)";
-    public static final String FIND_USER_BY_EMAIL_AND_PHONE = "SELECT * FROM users WHERE email = ? AND phone = ?";
+    private static final String ADD_USER = "INSERT INTO users(username, email, phone) VALUES (?, ?, ?)";
+    private static final String FIND_USER_BY_EMAIL_AND_PHONE = "SELECT * FROM users WHERE email = ? AND phone = ?";
     private final BasicDataSource pool;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserDAO.class.getName());

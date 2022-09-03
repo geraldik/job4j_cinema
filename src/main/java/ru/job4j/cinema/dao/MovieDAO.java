@@ -17,8 +17,8 @@ import java.util.Optional;
 @Repository
 public class MovieDAO {
 
-    public static final String FIND_BY_ID = "SELECT * FROM movie WHERE id = ?";
-    public static final String FIND_ALL = "SELECT * FROM movie";
+    private static final String FIND_BY_ID = "SELECT * FROM movie WHERE id = ?";
+    private static final String FIND_ALL = "SELECT * FROM movie";
     private final BasicDataSource pool;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserDAO.class.getName());

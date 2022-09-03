@@ -17,9 +17,9 @@ import java.util.Optional;
 
 @Repository
 public class TicketDAO {
-    public static final String CREATE_TICKET = "INSERT INTO ticket(movie_id, pos_row, cell, user_id) VALUES (?, ?, ?, ?)";
-    public static final String FIND_BY_MOVIE_ID_AND_ROW = "SELECT * FROM ticket WHERE movie_id = ? AND pos_row = ?";
-    public static final String FIND_BY_USER = "SELECT * FROM ticket WHERE user_id = ?";
+    private static final String CREATE_TICKET = "INSERT INTO ticket(movie_id, pos_row, cell, user_id) VALUES (?, ?, ?, ?)";
+    private static final String FIND_BY_MOVIE_ID_AND_ROW = "SELECT * FROM ticket WHERE movie_id = ? AND pos_row = ?";
+    private static final String FIND_BY_USER = "SELECT * FROM ticket WHERE user_id = ?";
     private static final String FIND_BY_MOVIE_ID = "SELECT * FROM ticket WHERE movie_id = ?";
     private final BasicDataSource pool;
 
