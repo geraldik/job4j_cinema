@@ -11,11 +11,12 @@
 ***
 **Перед запуском проекта:**
 * создать базу данных с именем ***cinema***
-* поменять login/password в файлах src/main/resources/db.properties
+* поменять login/password в файле src/main/resources/db.properties
 
 ***
 **Запуск приложения:**
-* запустить метод *main* в классе *src/main/java/ru/job4j/cinema/Main.java*
+* выполнить команду *maven install*
+* выполнить команду *java -jar target/job4j_cinema-1.0.jar*
 * после запуска сервера перейти на адрес: *http://localhost:8080/index*
 ***
 
