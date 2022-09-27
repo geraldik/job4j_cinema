@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import ru.job4j.cinema.dao.TicketDAO;
 import ru.job4j.cinema.model.Ticket;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Service
@@ -22,7 +22,7 @@ public class HallService {
     }
 
     private List<Integer> generateList(final int n) {
-        return IntStream.rangeClosed(1, n).boxed().toList();
+        return IntStream.rangeClosed(1, n).boxed().collect(Collectors.toList());
     }
 
     private Collection<Ticket> findByMovieIdAndRow(int movieId, int row) {

@@ -1,7 +1,6 @@
 package ru.job4j.cinema.service;
 
 import org.springframework.stereotype.Service;
-import org.thymeleaf.expression.Lists;
 import ru.job4j.cinema.dao.MovieDAO;
 import ru.job4j.cinema.dao.TicketDAO;
 import ru.job4j.cinema.model.Movie;
@@ -9,8 +8,6 @@ import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -36,7 +33,7 @@ public class TicketService {
         var moviesIds = userTickets.stream()
                 .map(Ticket::getMovieId)
                 .collect(Collectors.toSet());
-        var movies = movieDAO.findByIdIn( new ArrayList<>(moviesIds)).stream()
+        var movies = movieDAO.findByIdIn(new ArrayList<>(moviesIds)).stream()
                 .collect(toMap(Movie::getId, m -> m));
         return userTickets.stream()
                 .collect(toMap(t -> t, t -> movies.get(t.getMovieId())));

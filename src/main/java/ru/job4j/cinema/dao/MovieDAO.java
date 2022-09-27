@@ -8,7 +8,6 @@ import ru.job4j.cinema.model.Movie;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ public class MovieDAO {
 
     private static final String FIND_BY_ID = "SELECT * FROM movie WHERE id = ?";
     private static final String FIND_ALL = "SELECT * FROM movie";
-    public static final String FIND_ALL_BY_IDS = "SELECT * FROM movie WHERE id in (?)";
+    public static final String FIND_ALL_BY_IDS = "SELECT * FROM movie WHERE id = ANY(?)";
     private final BasicDataSource pool;
 
     private static final Logger LOG = LoggerFactory.getLogger(UserDAO.class.getName());
@@ -63,7 +62,7 @@ public class MovieDAO {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(FIND_ALL_BY_IDS)
         ) {
-            Array array = cn.createArrayOf("VARCHAR", createObjectArray(ids));
+            Array array = cn.createArrayOf("INT", createIntegerArray(ids));
             ps.setArray(1, array);
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
@@ -76,9 +75,9 @@ public class MovieDAO {
         return movies;
     }
 
-    private Object[] createObjectArray(List<Integer> ids) {
-        Object[] rsl = new Object[ids.size()];
-        for(int i = 0; i < rsl.length; i++) {
+    private Integer[] createIntegerArray(List<Integer> ids) {
+        Integer[] rsl = new Integer[ids.size()];
+        for (int i = 0; i < rsl.length; i++) {
             rsl[i] = ids.get(i);
         }
         return rsl;
